@@ -12,8 +12,6 @@ PubSubClient psClient = getPsClient(MQTT_SERVER, MQTT_PORT, callback);
 Timer xPostMessage;
 
 
-char msg[50];
-int value = 0;
 
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -35,12 +33,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
 	}
 }
 
-void vPostMessage() {
-	++value;
-	snprintf(msg, 50, "hello world #%ld", value);
-	Serial.print("Publish message: ");
-	Serial.println(msg);
-	psClient.publish("outTopic", msg);
+void vPostADC() {
+	unsigned int aDC = analogRead(A0);
+	char msg[33];
+	sprintf(msg, "%d", aDC);
+	psClient.publish("outADC", msg);
 }
 
 
@@ -49,7 +46,7 @@ void setup() {
 	Serial.begin(SERIAL_PORT_SPEED);
 	connectWifi(WIFI_SSID, WIFI_PASSWORD);
 
-	xPostMessage.every(POST_MESSAGE_PERIOD_MS, vPostMessage);
+	xPostMessage.every(POST_MESSAGE_PERIOD_MS, vPostADC);
 }
 
 void loop() {
