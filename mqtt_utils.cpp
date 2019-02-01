@@ -32,3 +32,10 @@ void connectMqtt(PubSubClient psClient, char* clientId, char* clientPassword) {
 	}
 }
 
+void mqttLoop(PubSubClient &psClient) {
+	if (!psClient.connected()) {
+		connectMqtt(psClient, MQTT_CLIENT_ID, MQTT_CLIENT_PASSWORD);
+		psClient.subscribe("inTopic");
+	}
+	psClient.loop();
+}

@@ -9,8 +9,9 @@
 
 
 PubSubClient psClient = getPsClient(MQTT_SERVER, MQTT_PORT, callback);
+Timer xPostMessage;
 
-long lastMsg = 0;
+
 char msg[50];
 int value = 0;
 
@@ -34,28 +35,26 @@ void callback(char* topic, byte* payload, unsigned int length) {
 	}
 }
 
+void vPostMessage() {
+	++value;
+	snprintf(msg, 50, "hello world #%ld", value);
+	Serial.print("Publish message: ");
+	Serial.println(msg);
+	psClient.publish("outTopic", msg);
+}
+
+
 void setup() {
 	pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
 	Serial.begin(SERIAL_PORT_SPEED);
 	connectWifi(WIFI_SSID, WIFI_PASSWORD);
+
+	xPostMessage.every(POST_MESSAGE_PERIOD_MS, vPostMessage);
 }
 
 void loop() {
 
-	if (!psClient.connected()) {
-		connectMqtt(psClient, MQTT_CLIENT_ID, MQTT_CLIENT_PASSWORD);
-		psClient.subscribe("inTopic");
-	}
-	psClient.loop();
+	mqttLoop(psClient);
 
-
-	long now = millis();
-	if (now - lastMsg > 2000) {
-		lastMsg = now;
-		++value;
-		snprintf(msg, 50, "hello world #%ld", value);
-		Serial.print("Publish message: ");
-		Serial.println(msg);
-		psClient.publish("outTopic", msg);
-	}
+	xPostMessage.update();
 }
