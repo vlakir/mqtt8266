@@ -4,14 +4,14 @@
 
 #include "wifi_utils.h"
 
-void connectWifi(char* ssid, char* password) {
+void vConnectWifi(char* acSsid, char* acPassword) {
 	delay(10);
 	// We start by connecting to a WiFi network
 	Serial.println();
 	Serial.print("Connecting to ");
-	Serial.println(ssid);
+	Serial.println(acSsid);
 
-	WiFi.begin(ssid, password);
+	WiFi.begin(acSsid, acPassword);
 
 	while (WiFi.status() != WL_CONNECTED) {
 		delay(500);
