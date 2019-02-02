@@ -9,13 +9,24 @@
 PubSubClient xPsClient = xGetPsClient(MQTT_SERVER, MQTT_PORT, vRecieveCallback);
 Timer xPostStateADC;
 
+
 void vPostADC() {
+	static unsigned int uiOld;
+	
+	DO_ONCE(
+		uiOld = 1025; // unreal value for 10-bit ADC
+	);
+
 	unsigned int uiADC = analogRead(A0);
-	char acMessage[33];
-	char acTopic[80];
-	sprintf(acMessage, "%d", uiADC);
-	sprintf(acTopic, "%s%s%s", DEVICE_UNIQ_ID, "/state", "/ADC");
-	xPsClient.publish(acTopic, acMessage);
+
+	if (uiADC != uiOld) {
+		uiOld = uiADC;
+		char acMessage[33];
+		char acTopic[80];
+		sprintf(acMessage, "%d", uiADC);
+		sprintf(acTopic, "%s%s%s", DEVICE_UNIQ_ID, "/state", "/ADC");
+		xPsClient.publish(acTopic, acMessage);
+	}
 }
 
 
@@ -44,7 +55,7 @@ void setup() {
 	pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
 	Serial.begin(SERIAL_PORT_SPEED);
 	vConnectWifi(WIFI_SSID, WIFI_PASSWORD);
-	xPostStateADC.every(POST_MESSAGE_PERIOD_MS, vPostADC);
+	xPostStateADC.every(CHECK_PERIPHERAL_PERIOD_MS, vPostADC);
 }
 
 
