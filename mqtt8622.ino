@@ -35,9 +35,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void vPostADC() {
 	unsigned int aDC = analogRead(A0);
-	char msg[33];
-	sprintf(msg, "%d", aDC);
-	psClient.publish("outADC", msg);
+	char message[33];
+	char topic[80];
+	sprintf(message, "%d", aDC);	
+	sprintf(topic, "%s%s%s", DEVICE_UNIQ_ID, "/state", "/ADC");
+	psClient.publish(topic, message);
 }
 
 
