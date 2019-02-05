@@ -6,4 +6,4 @@
 #include <avdweb_VirtualDelay.h>
 
 void vRecieveCallback(char* topic, byte* payload, unsigned int length);
-void vPostADC();
+void vPostADC(void* context);

@@ -10,7 +10,7 @@ PubSubClient xPsClient = xGetPsClient(MQTT_SERVER, MQTT_PORT, vRecieveCallback);
 Timer xPostStateADC;
 
 
-void vPostADC() {
+void vPostADC(void* context) {
 	static unsigned int uiOld;
 	
 	DO_ONCE(
@@ -55,7 +55,8 @@ void setup() {
 	pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
 	Serial.begin(SERIAL_PORT_SPEED);
 	vConnectWifi(WIFI_SSID, WIFI_PASSWORD);
-	xPostStateADC.every(CHECK_PERIPHERAL_PERIOD_MS, vPostADC);
+	xPostStateADC.every(CHECK_PERIPHERAL_PERIOD_MS, vPostADC, 0);
+	
 }
 
 
