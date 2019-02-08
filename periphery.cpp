@@ -7,16 +7,20 @@
 
 void vPostADC(void* vContext) {
 	static unsigned int uiOld;
-
+	VirtualDelay singleDelay;
 	PubSubClient *pxPsClient = (PubSubClient *)vContext;
-
-
+	
 	DO_ONCE(
-		uiOld = 1025; // unreal value for 10-bit ADC
+		uiOld = 1025; // initial unreal value for 10-bit ADC
 	);
 
+	singleDelay.start(FORCE_PUBLISH_PERIOD_MS);
+	if (singleDelay.elapsed()) {
+		uiOld = 1025; // to remind of itself even if nothing has changed
+	}
+
 	unsigned int uiADC = analogRead(A0);
-	//2do: время от времени публиковать значение даже если оно не изменилось на случай разрывов таймаутов на сервере и т. п.
+	
 	if (uiADC != uiOld) {
 		uiOld = uiADC;
 		char acMessage[33];
@@ -29,6 +33,10 @@ void vPostADC(void* vContext) {
 }
 
 void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {
+	
+	
+	
+	
 	Serial.print("Message arrived [");
 	Serial.print(acTopic);
 	Serial.print("] ");

@@ -32,7 +32,9 @@ void vConnectMqtt(PubSubClient xPsClient, char* acClientId, char* acClientPasswo
 void vMqttLoop(PubSubClient &xPsClient) {
 	if (!xPsClient.connected()) {
 		vConnectMqtt(xPsClient, MQTT_CLIENT_ID, MQTT_CLIENT_PASSWORD);
-		xPsClient.subscribe("inTopic");
+		char acTopic[80];
+		sprintf(acTopic, "%s%s", DEVICE_UNIQ_ID, "/management/#");		
+		xPsClient.subscribe(acTopic);		
 	}
 	xPsClient.loop();
 }
