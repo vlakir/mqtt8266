@@ -35,8 +35,25 @@ void vPostADC(void* vContext) {
 void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {
 	
 	
+	char acToken[20];
+	strcpy(acToken, acGetToken(acTopic, 2));
+
+	Serial.println(acToken);
+	Serial.println((char*)abPayload);
+
+	if (strcmp(acToken, "GPIO1") == 0) {
+		if (strcmp((char*)abPayload, "1") == 0) {
+			digitalWrite(BUILTIN_LED, HIGH);
+		} else if (strcmp((char*)abPayload, "0") == 0) {
+			digitalWrite(BUILTIN_LED, LOW);
+		}
+	}
+
+
 	
 	
+
+	/*
 	Serial.print("Message arrived [");
 	Serial.print(acTopic);
 	Serial.print("] ");
@@ -54,4 +71,19 @@ void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {
 	else {
 		digitalWrite(BUILTIN_LED, HIGH);  // Turn the LED off by making the voltage HIGH
 	}
+
+	*/
+}
+
+char* acGetToken(char* acTopicStr, unsigned int uiNumber) {
+	char acTopic[80];
+	strcpy(acTopic, acTopicStr);
+	char* aacTokens[20];
+	aacTokens[0] = strtok(acTopic, "/");
+	int i = 0;
+	while (aacTokens[i] != NULL) {
+		i++;
+		aacTokens[i] = strtok(NULL, "/");
+	}
+	return aacTokens[uiNumber];
 }
