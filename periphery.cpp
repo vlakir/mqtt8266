@@ -5,6 +5,20 @@
 #include "periphery.h"
 
 
+void initPeripheral () {
+	//set suitable for your device
+	pinMode(0, OUTPUT);
+	pinMode(2, OUTPUT);
+	pinMode(4, OUTPUT);
+	pinMode(5, OUTPUT);
+	pinMode(12, OUTPUT);
+	pinMode(13, OUTPUT);
+	pinMode(14, OUTPUT);
+	pinMode(15, OUTPUT);
+	pinMode(16, OUTPUT);
+}
+
+
 void vPostADC(void* vContext) {
 	static unsigned int uiOld;
 	VirtualDelay singleDelay;
@@ -32,48 +46,41 @@ void vPostADC(void* vContext) {
 	}
 }
 
-void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {
-	
-	
+
+void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {	
 	char acToken[20];
 	strcpy(acToken, acGetToken(acTopic, 2));
-
-	Serial.println(acToken);
-	Serial.println((char*)abPayload);
-
-	if (strcmp(acToken, "GPIO1") == 0) {
-		if (strcmp((char*)abPayload, "1") == 0) {
-			digitalWrite(BUILTIN_LED, HIGH);
-		} else if (strcmp((char*)abPayload, "0") == 0) {
-			digitalWrite(BUILTIN_LED, LOW);
-		}
+	if (strcmp(acToken, "GPIO0") == 0) {
+		setOut(abPayload, 0);
+	} else if (strcmp(acToken, "GPIO2") == 0) {
+		setOut(abPayload, 2);
+	} else if (strcmp(acToken, "GPIO4") == 0) {
+		setOut(abPayload, 4); // BUILTIN_LED for WEMOS D1 mini
+	} else if (strcmp(acToken, "GPIO5") == 0) {
+		setOut(abPayload, 5);
+	} else if (strcmp(acToken, "GPIO12") == 0) {
+		setOut(abPayload, 12);
+	} else if (strcmp(acToken, "GPIO13") == 0) {
+		setOut(abPayload, 13);
+	} else if (strcmp(acToken, "GPIO14") == 0) {
+		setOut(abPayload, 14);
+	} else if (strcmp(acToken, "GPIO15") == 0) {
+		setOut(abPayload, 15);
+	} else if (strcmp(acToken, "GPIO16") == 0) {
+		setOut(abPayload, 16);
+	} else if (strcmp(acToken, "GPIOALL") == 0) {
+		setOut(abPayload, 0);
+		setOut(abPayload, 2);
+		setOut(abPayload, 4);
+		setOut(abPayload, 5);
+		setOut(abPayload, 12);
+		setOut(abPayload, 13);
+		setOut(abPayload, 14);
+		setOut(abPayload, 15);
+		setOut(abPayload, 16);
 	}
-
-
-	
-	
-
-	/*
-	Serial.print("Message arrived [");
-	Serial.print(acTopic);
-	Serial.print("] ");
-	for (int i = 0; i < uiLength; i++) {
-		Serial.print((char)abPayload[i]);
-	}
-	Serial.println();
-
-	// Switch on the LED if an 1 was received as first character
-	if ((char)abPayload[0] == '1') {
-		digitalWrite(BUILTIN_LED, LOW);   // Turn the LED on (Note that LOW is the voltage level
-		// but actually the LED is on; this is because
-		// it is active low on the ESP-01)
-	}
-	else {
-		digitalWrite(BUILTIN_LED, HIGH);  // Turn the LED off by making the voltage HIGH
-	}
-
-	*/
 }
+
 
 char* acGetToken(char* acTopicStr, unsigned int uiNumber) {
 	char acTopic[80];
@@ -86,4 +93,14 @@ char* acGetToken(char* acTopicStr, unsigned int uiNumber) {
 		aacTokens[i] = strtok(NULL, "/");
 	}
 	return aacTokens[uiNumber];
+}
+
+
+void setOut(byte* abPayload, byte bNumber) {
+	if (strcmp((char*)abPayload, "1") == 0) {
+		digitalWrite(bNumber, HIGH);
+	}
+	else if (strcmp((char*)abPayload, "0") == 0) {
+		digitalWrite(bNumber, LOW);
+	}
 }
