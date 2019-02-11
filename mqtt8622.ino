@@ -24,4 +24,18 @@ void loop() {
 	vMqttLoop(xPsClient);
 	xPostStateADC.update();
 	xPostStateGPIO.update();
+
+	String inString;
+	while (Serial.available()) {
+		char inChar = Serial.read(); 
+		if (inChar != 13) {
+			inString += inChar;      
+		} else {
+			Serial.flush();
+			//2do: get settings string
+		}
+	}
+
+
+
 }
