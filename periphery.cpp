@@ -93,34 +93,35 @@ void vPostGPIO(void* vContext) {
 void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {	
 	char acToken[20];
 	strcpy(acToken, acGetToken(acTopic, 2));
+	char * acMessage = acPayload2string(abPayload, uiLength);
 	if (strcmp(acToken, "GPIO0") == 0) {
-		vSetOut(abPayload, 0);
+		vSetOut(acMessage, 0);
 	} else if (strcmp(acToken, "GPIO2") == 0) {
-		vSetOut(abPayload, 2);
+		vSetOut(acMessage, 2); // BUILTIN_LED for WEMOS D1 mini
 	} else if (strcmp(acToken, "GPIO4") == 0) {
-		vSetOut(abPayload, 4); // BUILTIN_LED for WEMOS D1 mini
+		vSetOut(acMessage, 4); 
 	} else if (strcmp(acToken, "GPIO5") == 0) {
-		vSetOut(abPayload, 5);
+		vSetOut(acMessage, 5);
 	} else if (strcmp(acToken, "GPIO12") == 0) {
-		vSetOut(abPayload, 12);
+		vSetOut(acMessage, 12);
 	} else if (strcmp(acToken, "GPIO13") == 0) {
-		vSetOut(abPayload, 13);
+		vSetOut(acMessage, 13);
 	} else if (strcmp(acToken, "GPIO14") == 0) {
-		vSetOut(abPayload, 14);
+		vSetOut(acMessage, 14);
 	} else if (strcmp(acToken, "GPIO15") == 0) {
-		vSetOut(abPayload, 15);
+		vSetOut(acMessage, 15);
 	} else if (strcmp(acToken, "GPIO16") == 0) {
-		vSetOut(abPayload, 16);
+		vSetOut(acMessage, 16);
 	} else if (strcmp(acToken, "GPIOALL") == 0) {
-		vSetOut(abPayload, 0);
-		vSetOut(abPayload, 2);
-		vSetOut(abPayload, 4);
-		vSetOut(abPayload, 5);
-		vSetOut(abPayload, 12);
-		vSetOut(abPayload, 13);
-		vSetOut(abPayload, 14);
-		vSetOut(abPayload, 15);
-		vSetOut(abPayload, 16);
+		vSetOut(acMessage, 0);
+		vSetOut(acMessage, 2); // BUILTIN_LED for WEMOS D1 mini
+		vSetOut(acMessage, 4);
+		vSetOut(acMessage, 5);
+		vSetOut(acMessage, 12);
+		vSetOut(acMessage, 13);
+		vSetOut(acMessage, 14);
+		vSetOut(acMessage, 15);
+		vSetOut(acMessage, 16);
 	}
 }
 
@@ -139,22 +140,34 @@ char* acGetToken(char* acTopicStr, unsigned int uiNumber) {
 }
 
 
-void vSetOut(byte* abPayload, byte bNumber) {
-	if (strcmp((char*)abPayload, "1") == 0) {
+void vSetOut(char * cMessage, byte bNumber) {
+	if (strcmp(cMessage, "1") == 0) {
 		digitalWrite(bNumber, HIGH);
 	}
-	else if (strcmp((char*)abPayload, "0") == 0) {
+	else if (strcmp(cMessage, "0") == 0) {
 		digitalWrite(bNumber, LOW);
 	}
 }
 
 
-void vStateBit(bool bit, char* acId, PubSubClient *pxPsClient) {
-	static VirtualDelay singleDelay;
+void vStateBit(unsigned int uiValue, char* acId, PubSubClient *pxPsClient) {
 	char acMessage[33];
 	char acTopic[80];	
-	sprintf(acMessage, "%d", bit);
+	sprintf(acMessage, "%d", uiValue);
 	sprintf(acTopic, "%s%s%s", DEVICE_UNIQ_ID, "/state/", acId);
 	(*pxPsClient).publish(acTopic, acMessage);
 	
+}
+
+
+char * acPayload2string(byte* abPayload, unsigned int uiLength) {
+
+	char* acMessageBuffer = new char[uiLength+1];
+
+	int i;
+	for (i = 0; i < uiLength; i++) {
+		acMessageBuffer[i] = abPayload[i];
+	}
+	acMessageBuffer[uiLength] = '\0';
+	return acMessageBuffer;
 }

@@ -10,5 +10,6 @@ void vPostADC(void* context);
 void vPostGPIO(void* vContext);
 void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength);
 char* acGetToken(char* acTopicStr, unsigned int uiNumber);
-void vSetOut(byte* abPayload, byte bNumber);
-void vStateBit(bool bit, char* acId, PubSubClient *pxPsClient);
+void vSetOut(char * cMessage, byte bNumber);
+void vStateBit(unsigned int uiValue, char* acId, PubSubClient *pxPsClient);
+char * acPayload2string(byte* abPayload, unsigned int uiLength);
