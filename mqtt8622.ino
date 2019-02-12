@@ -4,6 +4,7 @@
  Author:	Vladimir
 */
 
+#include "serial_cli.h"
 #include "mqtt8622.h"
 
 PubSubClient xPsClient = xGetPsClient(MQTT_SERVER, MQTT_PORT, vRecieveCallback);
