@@ -4,7 +4,6 @@
  Author:	Vladimir
 */
 
-#include "serial_cli.h"
 #include "mqtt8622.h"
 
 PubSubClient xPsClient = xGetPsClient(MQTT_SERVER, MQTT_PORT, vRecieveCallback);
@@ -13,6 +12,9 @@ Timer xPostStateADC, xPostStateGPIO;
 void setup() {
 	pinMode(BUILTIN_LED, OUTPUT); 
 	initPeripheral();
+
+	cli_init();
+
 	Serial.begin(SERIAL_PORT_SPEED);
 	vConnectWifi(WIFI_SSID, WIFI_PASSWORD);
 	xPostStateADC.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *) &xPsClient);
@@ -26,17 +28,6 @@ void loop() {
 	xPostStateADC.update();
 	xPostStateGPIO.update();
 
-	String inString;
-	while (Serial.available()) {
-		char inChar = Serial.read(); 
-		if (inChar != 13) {
-			inString += inChar;      
-		} else {
-			Serial.flush();
-			//2do: get settings string
-		}
-	}
-
-
+	my_cli();
 
 }

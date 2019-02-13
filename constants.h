@@ -12,3 +12,9 @@
 #define FORCE_ADC_PUBLISH_PERIOD_MS 10000
 #define GPIO_CHECK_PERIOD_MS 2000
 #define FORCE_GPIO_PUBLISH_PERIOD_MS 20000
+
+#define LINE_BUF_SIZE 128   //Maximum input string length
+#define ARG_BUF_SIZE 64     //Maximum argument string length
+#define MAX_NUM_ARGS 8      //Maximum number of arguments
+
+
