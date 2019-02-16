@@ -14,6 +14,7 @@ EEPROMStruct xRestoreDefaultSettings() {
 	xSettings.acMQTTclientPassword = DEFAULT_MQTT_CLIENT_PASSWORD;
 	xSettings.uiMQTTport = DEFAULT_MQTT_PORT;
 	return xSettings;
+
 }
 
 

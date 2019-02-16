@@ -8,32 +8,22 @@
 
 
 EEPROMStruct xSettings = xRestoreDefaultSettings();
-PubSubClient xPsClient;
+PubSubClient xPsClient = xGetPsClient(xSettings.acMQTTserver, xSettings.uiMQTTport, vRecieveCallback);
 Timer xPostStateADC, xPostStateGPIO;
+
 
 
 void setup() {	
 	Serial.begin(SERIAL_PORT_SPEED);		
-	//xPsClient = xGetPsClient(xSettings.acMQTTserver, xSettings.uiMQTTport, vRecieveCallback);
-
-	xPsClient = xGetPsClient(DEFAULT_MQTT_SERVER, DEFAULT_MQTT_PORT, vRecieveCallback);
-
 	initPeripheral();
-	//vConnectWifi(xSettings.acWiFiSSID, xSettings.acWiFiPassword);
-
-	vConnectWifi(DEFAULT_WIFI_SSID, DEFAULT_WIFI_PASSWORD);
-
+	vConnectWifi(xSettings.acWiFiSSID, xSettings.acWiFiPassword);
 	xPostStateADC.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *) &xPsClient);
 	xPostStateGPIO.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);	
-
-
 }
 
 
 void loop() {
-
-
-	vMqttLoop(xPsClient, DEFAULT_MQTT_CLIENT_ID, DEFAULT_MQTT_CLIENT_PASSWORD);
+	vMqttLoop(xPsClient, xSettings.acMQTTclientID, xSettings.acMQTTclientPassword);
 	xPostStateADC.update();
 	xPostStateGPIO.update();
 

@@ -12,4 +12,5 @@ struct EEPROMStruct {
 	unsigned int uiMQTTport;
 };
 
+
 EEPROMStruct xRestoreDefaultSettings();
