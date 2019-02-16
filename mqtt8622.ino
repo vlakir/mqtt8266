@@ -6,25 +6,38 @@
 
 #include "mqtt8622.h"
 
-PubSubClient xPsClient = xGetPsClient(DEFAULT_MQTT_SERVER, DEFAULT_MQTT_PORT, vRecieveCallback);
+
+EEPROMStruct xSettings = xRestoreDefaultSettings();
+PubSubClient xPsClient;
 Timer xPostStateADC, xPostStateGPIO;
 
-void setup() {
-	pinMode(BUILTIN_LED, OUTPUT); 
+
+void setup() {	
+	Serial.begin(SERIAL_PORT_SPEED);		
+	//xPsClient = xGetPsClient(xSettings.acMQTTserver, xSettings.uiMQTTport, vRecieveCallback);
+
+	xPsClient = xGetPsClient(DEFAULT_MQTT_SERVER, DEFAULT_MQTT_PORT, vRecieveCallback);
+
 	initPeripheral();
-	Serial.begin(SERIAL_PORT_SPEED);
+	//vConnectWifi(xSettings.acWiFiSSID, xSettings.acWiFiPassword);
+
 	vConnectWifi(DEFAULT_WIFI_SSID, DEFAULT_WIFI_PASSWORD);
+
 	xPostStateADC.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *) &xPsClient);
-	xPostStateGPIO.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);
-	
+	xPostStateGPIO.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);	
+
+
 }
 
 
 void loop() {
+
+
 	vMqttLoop(xPsClient, DEFAULT_MQTT_CLIENT_ID, DEFAULT_MQTT_CLIENT_PASSWORD);
 	xPostStateADC.update();
 	xPostStateGPIO.update();
 
+	/*
 	String inString;
 	while (Serial.available()) {
 		char inChar = Serial.read(); 
@@ -35,7 +48,6 @@ void loop() {
 			//2do: get settings string
 		}
 	}
-
-
+	*/
 
 }
