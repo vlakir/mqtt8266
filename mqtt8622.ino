@@ -6,14 +6,14 @@
 
 #include "mqtt8622.h"
 
-PubSubClient xPsClient = xGetPsClient(MQTT_SERVER, MQTT_PORT, vRecieveCallback);
+PubSubClient xPsClient = xGetPsClient(DEFAULT_MQTT_SERVER, DEFAULT_MQTT_PORT, vRecieveCallback);
 Timer xPostStateADC, xPostStateGPIO;
 
 void setup() {
 	pinMode(BUILTIN_LED, OUTPUT); 
 	initPeripheral();
 	Serial.begin(SERIAL_PORT_SPEED);
-	vConnectWifi(WIFI_SSID, WIFI_PASSWORD);
+	vConnectWifi(DEFAULT_WIFI_SSID, DEFAULT_WIFI_PASSWORD);
 	xPostStateADC.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *) &xPsClient);
 	xPostStateGPIO.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);
 	
@@ -21,7 +21,7 @@ void setup() {
 
 
 void loop() {
-	vMqttLoop(xPsClient);
+	vMqttLoop(xPsClient, DEFAULT_MQTT_CLIENT_ID, DEFAULT_MQTT_CLIENT_PASSWORD);
 	xPostStateADC.update();
 	xPostStateGPIO.update();
 
