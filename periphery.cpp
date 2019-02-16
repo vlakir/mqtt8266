@@ -40,6 +40,8 @@ void vPostADC(void* vContext) {
 		char acMessage[33];
 		char acTopic[80];
 		sprintf(acMessage, "%d", uiADC);
+		
+		
 		sprintf(acTopic, "%s%s%s", DEFAULT_DEVICE_UNIQ_ID, "/state", "/ADC");
 
 		(*pxPsClient).publish(acTopic, acMessage);
