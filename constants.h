@@ -13,3 +13,15 @@
 #define FORCE_ADC_PUBLISH_PERIOD_MS 10000
 #define GPIO_CHECK_PERIOD_MS 2000
 #define FORCE_GPIO_PUBLISH_PERIOD_MS 20000
+
+struct SettingsStruct {
+	char acDeviceID[20];
+	char acWiFiSSID[20];
+	char acWiFiPassword[20];
+	char acMQTTserver[80];
+	char acMQTTclientID[20];
+	char acMQTTclientPassword[20];
+	unsigned int uiMQTTport;
+};
+
+extern SettingsStruct xGlobalSettings;

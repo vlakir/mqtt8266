@@ -42,7 +42,7 @@ void vPostADC(void* vContext) {
 		sprintf(acMessage, "%d", uiADC);
 		
 		
-		sprintf(acTopic, "%s%s%s", DEFAULT_DEVICE_UNIQ_ID, "/state", "/ADC");
+		sprintf(acTopic, "%s%s%s", xGlobalSettings.acDeviceID, "/state", "/ADC");
 
 		(*pxPsClient).publish(acTopic, acMessage);
 	}
@@ -156,7 +156,7 @@ void vStateBit(unsigned int uiValue, char* acId, PubSubClient *pxPsClient) {
 	char acMessage[33];
 	char acTopic[80];	
 	sprintf(acMessage, "%d", uiValue);
-	sprintf(acTopic, "%s%s%s", DEFAULT_DEVICE_UNIQ_ID, "/state/", acId);
+	sprintf(acTopic, "%s%s%s", xGlobalSettings.acDeviceID, "/state/", acId);
 	(*pxPsClient).publish(acTopic, acMessage);
 	
 }

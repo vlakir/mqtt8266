@@ -7,7 +7,8 @@
 #include "mqtt8622.h"
 
 
-//EEPROMStruct xSettings = xRestoreDefaultSettings();
+
+//SettingsStruct xGlobalSettings = xRestoreDefaultSettings();
 
 /*
 {
@@ -19,29 +20,32 @@
 	"mqtt_client_password": "Z0X_d-YpixmZ",
 	"mqtt_port": "19456"
 }
-	*/
+*/
+
+
 char input[] = "{\"device_id\":\"D1_002\",\"wifi_ssid\":\"T_27\",\"wifi_password\":\"begemot2013\", \
-					  \"mqtt_server\":\"m24.cloudmqtt.com\",\"mqtt_client_id\":\"jyrpzrzt\", \
-		              \"mqtt_client_password\":\"Z0X_d-YpixmZ\",\"mqtt_port\" :\"19456\"}";
+					\"mqtt_server\":\"m24.cloudmqtt.com\",\"mqtt_client_id\":\"jyrpzrzt\", \
+					\"mqtt_client_password\":\"Z0X_d-YpixmZ\",\"mqtt_port\" :\"19456\"}";
 
-EEPROMStruct xSettings = xGetFromJson(input);
+SettingsStruct xGlobalSettings = xGetSettingsFromJson(input);
 
 
 
-PubSubClient xPsClient = xGetPsClient(xSettings.acMQTTserver, xSettings.uiMQTTport, vRecieveCallback);
+PubSubClient xPsClient = xGetPsClient(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport, vRecieveCallback);
 Timer xPostStateADC, xPostStateGPIO;
 
 
 
 void setup() {	
-	Serial.begin(SERIAL_PORT_SPEED);		
-	initPeripheral();
-	vConnectWifi(xSettings.acWiFiSSID, xSettings.acWiFiPassword);
+	Serial.begin(SERIAL_PORT_SPEED);
 
+	
+	initPeripheral();
+
+	vConnectWifi(xGlobalSettings.acWiFiSSID, xGlobalSettings.acWiFiPassword);
 
 	xPostStateADC.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *) &xPsClient);
 	xPostStateGPIO.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);	
-
 
 
 
@@ -50,7 +54,12 @@ void setup() {
 
 
 void loop() {
-	vMqttLoop(xPsClient, xSettings.acMQTTclientID, xSettings.acMQTTclientPassword, xSettings.acDeviceID);
+	
+
+	vMqttLoop(xPsClient, xGlobalSettings.acMQTTclientID, xGlobalSettings.acMQTTclientPassword, xGlobalSettings.acDeviceID);
+	
+	
+	
 	xPostStateADC.update();
 	xPostStateGPIO.update();
 

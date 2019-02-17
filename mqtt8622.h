@@ -1,9 +1,11 @@
 #pragma once
 
+
+#include "constants.h"
 #include <Timer.h>
 #include <PubSubClient.h>
 #include <avdweb_VirtualDelay.h>
-#include "constants.h"
+
 #include "mqtt_utils.h"
 #include "periphery.h"
 #include "EEPROM_utils.h"
