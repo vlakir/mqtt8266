@@ -1,42 +1,50 @@
 
 #include "mqtt_utils.h"
 
-PubSubClient xGetPsClient(std::function<void(char*, uint8_t*, unsigned int)> vRecieveCallback) {
-	WiFiClient xWifiClient;
-	PubSubClient xPsClient(xWifiClient);
+
+Timer xPostStateADC, xPostStateGPIO;
+static WiFiClient xWifiClient;
+static PubSubClient xPsClient(xWifiClient);
+
+void vSetServer() {
 	xPsClient.setServer(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport);
-	xPsClient.setCallback(vRecieveCallback);	
-	return xPsClient;
 }
 
 
-void vConnectMqtt(PubSubClient xPsClient) {
-	// Loop until we're reconnected
-	while (!xPsClient.connected()) {
-		Serial.print("Attempting MQTT connection...");
-
-		// Attempt to connect
-		if (xPsClient.connect("arduinoClient", xGlobalSettings.acMQTTclientID, xGlobalSettings.acMQTTclientPassword)) {
-			Serial.println("connected");
-		}
-		else {
-			Serial.print("failed, rc=");
-			Serial.print(xPsClient.state());
-			Serial.println(" try again in 5 seconds");
-			// Wait 5 seconds before retrying
-			delay(5000);
-		}
-	}
-}
-
-void vMqttLoop(PubSubClient &xPsClient) {
+void vMqttLoop() {	
 	
+	if (!xPsClient.connected()) {		
+		
+		vSetServer();
+		xPsClient.setCallback(vRecieveCallback);		
+		
+		
+		
+		while (!xPsClient.connected()) {
+			Serial.print("Attempting MQTT connection...");
 
-	if (!xPsClient.connected()) {
-		vConnectMqtt(xPsClient);
+			// Attempt to connect
+			if (xPsClient.connect("arduinoClient", xGlobalSettings.acMQTTclientID, xGlobalSettings.acMQTTclientPassword)) {
+				Serial.println("connected");
+			}
+			else {
+				Serial.print("failed, rc=");
+				Serial.print(xPsClient.state());
+				Serial.println(" try again in 5 seconds");
+				// Wait 5 seconds before retrying
+				delay(5000);
+			}
+		}
 		char acTopic[80];
 		sprintf(acTopic, "%s%s", xGlobalSettings.acDeviceID, "/management/#");
 		xPsClient.subscribe(acTopic);	
+
+		xPostStateADC.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *)&xPsClient);
+		xPostStateGPIO.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);
+
 	}
+
+	xPostStateADC.update();
+	xPostStateGPIO.update();
 	xPsClient.loop();
 }

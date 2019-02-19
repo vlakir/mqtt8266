@@ -29,9 +29,6 @@ char input[] = "{\"device_id\":\"D1_002\",\"wifi_ssid\":\"T_27\",\"wifi_password
 
 SettingsStruct xGlobalSettings = xGetSettingsFromJson(input);
 
-PubSubClient xPsClient = xGetPsClient(vRecieveCallback);
-Timer xPostStateADC, xPostStateGPIO;
-
 
 
 void setup() {	
@@ -40,30 +37,17 @@ void setup() {
 	vSaveCurrentSettingsToEEPROM();
 
 	xGlobalSettings = xGetSettingsFromEEPROM();
-
 	
 	initPeripheral();
 
 	vConnectWifi();
 
-	xPostStateADC.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *) &xPsClient);
-	xPostStateGPIO.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);	
-
-
-
-
 }
 
 
-void loop() {
-	
+void loop() {	
 
-	vMqttLoop(xPsClient);
-	
-	
-	
-	xPostStateADC.update();
-	xPostStateGPIO.update();
+	vMqttLoop();
 
 	/*
 	String inString;

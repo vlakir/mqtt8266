@@ -2,12 +2,11 @@
 
 
 #include "settings.h"
-#include <Timer.h>
-#include <PubSubClient.h>
+
 #include <avdweb_VirtualDelay.h>
 
-#include "mqtt_utils.h"
 #include "periphery.h"
+#include "mqtt_utils.h"
 #include "EEPROM_utils.h"
 
 

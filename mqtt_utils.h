@@ -2,10 +2,14 @@
 
 
 #include "settings.h"
+#include <Timer.h>
 #include <PubSubClient.h>
 #include "wifi_utils.h"
+#include "periphery.h"
 
 
-PubSubClient xGetPsClient(std::function<void(char*, uint8_t*, unsigned int)> callback);
-void vConnectMqtt(PubSubClient psClient);
-void vMqttLoop(PubSubClient &xPsClient);
+
+
+
+void vSetServer();
+void vMqttLoop();
