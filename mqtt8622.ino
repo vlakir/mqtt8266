@@ -38,7 +38,8 @@ Timer xPostStateADC, xPostStateGPIO;
 
 void setup() {	
 	Serial.begin(SERIAL_PORT_SPEED);
-
+	
+	vSaveCurrentSettingsToEEPROM();
 	
 	initPeripheral();
 

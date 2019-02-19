@@ -39,3 +39,10 @@ SettingsStruct xGetSettingsFromJson(char* input) {
 	}
 }
 
+void vSaveCurrentSettingsToEEPROM() {	
+	EEPROM.begin(sizeof(SettingsStruct));
+	EEPROM.put(0, xGlobalSettings);
+	boolean ok1 = EEPROM.commitReset();
+	Serial.println((ok1) ? "Commit EEPROM OK" : "Commit EEPROM failed");	
+}
+
