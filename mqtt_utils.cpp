@@ -1,22 +1,22 @@
 
 #include "mqtt_utils.h"
 
-PubSubClient xGetPsClient(char* acServer, unsigned int uiPort, std::function<void(char*, uint8_t*, unsigned int)> vRecieveCallback) {
+PubSubClient xGetPsClient(std::function<void(char*, uint8_t*, unsigned int)> vRecieveCallback) {
 	WiFiClient xWifiClient;
 	PubSubClient xPsClient(xWifiClient);
-	xPsClient.setServer(acServer, uiPort);
+	xPsClient.setServer(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport);
 	xPsClient.setCallback(vRecieveCallback);	
 	return xPsClient;
 }
 
 
-void vConnectMqtt(PubSubClient xPsClient, char* acClientId, char* acClientPassword) {
+void vConnectMqtt(PubSubClient xPsClient) {
 	// Loop until we're reconnected
 	while (!xPsClient.connected()) {
 		Serial.print("Attempting MQTT connection...");
 
 		// Attempt to connect
-		if (xPsClient.connect("arduinoClient", acClientId, acClientPassword)) {
+		if (xPsClient.connect("arduinoClient", xGlobalSettings.acMQTTclientID, xGlobalSettings.acMQTTclientPassword)) {
 			Serial.println("connected");
 		}
 		else {
@@ -29,13 +29,13 @@ void vConnectMqtt(PubSubClient xPsClient, char* acClientId, char* acClientPasswo
 	}
 }
 
-void vMqttLoop(PubSubClient &xPsClient, char* acClientID, char* acClientPassword, char* device_id) {
+void vMqttLoop(PubSubClient &xPsClient) {
 	
 
 	if (!xPsClient.connected()) {
-		vConnectMqtt(xPsClient, acClientID, acClientPassword);
+		vConnectMqtt(xPsClient);
 		char acTopic[80];
-		sprintf(acTopic, "%s%s", device_id, "/management/#");
+		sprintf(acTopic, "%s%s", xGlobalSettings.acDeviceID, "/management/#");
 		xPsClient.subscribe(acTopic);	
 	}
 	xPsClient.loop();

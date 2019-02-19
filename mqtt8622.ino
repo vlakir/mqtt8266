@@ -31,7 +31,7 @@ SettingsStruct xGlobalSettings = xGetSettingsFromJson(input);
 
 
 
-PubSubClient xPsClient = xGetPsClient(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport, vRecieveCallback);
+PubSubClient xPsClient = xGetPsClient(vRecieveCallback);
 Timer xPostStateADC, xPostStateGPIO;
 
 
@@ -42,7 +42,7 @@ void setup() {
 	
 	initPeripheral();
 
-	vConnectWifi(xGlobalSettings.acWiFiSSID, xGlobalSettings.acWiFiPassword);
+	vConnectWifi();
 
 	xPostStateADC.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *) &xPsClient);
 	xPostStateGPIO.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);	
@@ -56,7 +56,7 @@ void setup() {
 void loop() {
 	
 
-	vMqttLoop(xPsClient, xGlobalSettings.acMQTTclientID, xGlobalSettings.acMQTTclientPassword, xGlobalSettings.acDeviceID);
+	vMqttLoop(xPsClient);
 	
 	
 	
