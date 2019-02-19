@@ -29,8 +29,6 @@ char input[] = "{\"device_id\":\"D1_002\",\"wifi_ssid\":\"T_27\",\"wifi_password
 
 SettingsStruct xGlobalSettings = xGetSettingsFromJson(input);
 
-
-
 PubSubClient xPsClient = xGetPsClient(vRecieveCallback);
 Timer xPostStateADC, xPostStateGPIO;
 
@@ -40,6 +38,9 @@ void setup() {
 	Serial.begin(SERIAL_PORT_SPEED);
 	
 	vSaveCurrentSettingsToEEPROM();
+
+	xGlobalSettings = xGetSettingsFromEEPROM();
+
 	
 	initPeripheral();
 

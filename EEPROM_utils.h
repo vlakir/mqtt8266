@@ -9,3 +9,4 @@
 SettingsStruct xRestoreDefaultSettings();
 SettingsStruct xGetSettingsFromJson(char* input);
 void vSaveCurrentSettingsToEEPROM();
+SettingsStruct xGetSettingsFromEEPROM();

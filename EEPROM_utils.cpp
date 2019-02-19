@@ -46,3 +46,8 @@ void vSaveCurrentSettingsToEEPROM() {
 	Serial.println((ok1) ? "Commit EEPROM OK" : "Commit EEPROM failed");	
 }
 
+SettingsStruct xGetSettingsFromEEPROM() {
+	SettingsStruct xSettings;	
+	EEPROM.get(0, xSettings);
+	return xSettings;
+}
