@@ -5,6 +5,8 @@
 
 #include <avdweb_VirtualDelay.h>
 
+#include "lib/zlib/zlib.h"
+
 #include "periphery.h"
 #include "mqtt_utils.h"
 #include "EEPROM_utils.h"
