@@ -2,14 +2,11 @@
 
 
 #include "settings.h"
-
 #include <avdweb_VirtualDelay.h>
-
-#include "lib/zlib/zlib.h"
-
 #include "periphery.h"
 #include "mqtt_utils.h"
 #include "EEPROM_utils.h"
+#include "checksum.h"
 
 
 void vRecieveCallback(char* topic, byte* payload, unsigned int length);

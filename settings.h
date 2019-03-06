@@ -22,6 +22,7 @@ struct SettingsStruct {
 	char acMQTTclientID[20];
 	char acMQTTclientPassword[20];
 	unsigned int uiMQTTport;
+	long lCheckSum;
 };
 
 extern SettingsStruct xGlobalSettings;

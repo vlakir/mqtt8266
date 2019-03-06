@@ -6,8 +6,6 @@
 
 #include "mqtt8622.h"
 
-
-
 //SettingsStruct xGlobalSettings = xRestoreDefaultSettings();
 
 SettingsStruct xGlobalSettings;
@@ -32,10 +30,6 @@ char input[] = "{\"device_id\":\"D1_002\",\"wifi_ssid\":\"T_27\",\"wifi_password
 */
 
 
-
-
-
-
 void setup() {	
 	Serial.begin(SERIAL_PORT_SPEED);	
 
@@ -49,19 +43,30 @@ void setup() {
 	}
 	*/
 
-
-
 	initPeripheral();
 
 	vConnectWifi();
+
+	struct SettingsStruct xStruct;
+
+	strcpy(xStruct.acDeviceID, "11134");
+	strcpy(xStruct.acWiFiSSID, "22822");
+	strcpy(xStruct.acWiFiPassword, "33493");
+	strcpy(xStruct.acMQTTserver, "444654");
+	strcpy(xStruct.acMQTTclientID, "55234554");
+	strcpy(xStruct.acMQTTclientPassword, "63256666");
+	xStruct.uiMQTTport = 6901;
+
+	xStruct.lCheckSum = lGetCRC32ofStruct(xStruct);
+
+	printf("%lx%s", xStruct.lCheckSum, "\n");
 
 }
 
 
 void loop() {	
 
-	vMqttLoop();	
-	
+	vMqttLoop();		
 	
 	/*
 	String inString;
