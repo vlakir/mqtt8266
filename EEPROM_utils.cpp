@@ -1,6 +1,3 @@
-// 
-// 
-// 
 
 #include "EEPROM_utils.h"
 
@@ -14,6 +11,7 @@ SettingsStruct xRestoreDefaultSettings() {
 	strcpy(xSettings.acMQTTclientID, DEFAULT_MQTT_CLIENT_ID);
 	strcpy(xSettings.acMQTTclientPassword, DEFAULT_MQTT_CLIENT_PASSWORD);
 	xSettings.uiMQTTport = DEFAULT_MQTT_PORT;
+	xSettings.lCheckSum = DEFAULT_CRC;
 	return xSettings;
 }
 
@@ -31,6 +29,7 @@ SettingsStruct xGetSettingsFromJson(char* input) {
 		strcpy(xSettings.acMQTTclientID, obj["mqtt_client_id"]);
 		strcpy(xSettings.acMQTTclientPassword, obj["mqtt_client_password"]);
 		xSettings.uiMQTTport = atoi(obj["mqtt_port"]);
+		xSettings.lCheckSum = DEFAULT_CRC;
 		return xSettings;
 	}
 	else {
@@ -46,8 +45,7 @@ void vSaveCurrentSettingsToEEPROM() {
 	Serial.println((ok1) ? "Commit EEPROM OK" : "Commit EEPROM failed");	
 }
 
-SettingsStruct xGetSettingsFromEEPROM() {
-	SettingsStruct xSettings;	
-	EEPROM.get(0, xSettings);
-	return xSettings;
+void vGetSettingsFromEEPROM() {
+	EEPROM.begin(sizeof(SettingsStruct));
+	EEPROM.get(0, xGlobalSettings);
 }

@@ -6,8 +6,6 @@
 #include "periphery.h"
 #include "mqtt_utils.h"
 #include "EEPROM_utils.h"
-#include "checksum.h"
-
 
 void vRecieveCallback(char* topic, byte* payload, unsigned int length);
 void vPostADC(void* vContext);

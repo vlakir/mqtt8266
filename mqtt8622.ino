@@ -31,35 +31,35 @@ char input[] = "{\"device_id\":\"D1_002\",\"wifi_ssid\":\"T_27\",\"wifi_password
 
 
 void setup() {	
-	Serial.begin(SERIAL_PORT_SPEED);	
+	Serial.begin(SERIAL_PORT_SPEED);		
+	
+	delay(1000);
 
-	xGlobalSettings = xRestoreDefaultSettings();
+	Serial.println("\n\n\nTry to get settings from EEPROM...");
+	vGetSettingsFromEEPROM();
 
-	/*
-	xGlobalSettings = xGetSettingsFromEEPROM();
+	Serial.println(xGlobalSettings.lCheckSum);
+	Serial.println(xGlobalSettings.acWiFiSSID);
 
-	if (strcmp(xGlobalSettings.acDeviceID, "") == 0) { //no settings in EEPROM
-		
+	if (xGlobalSettings.lCheckSum != DEFAULT_CRC) { //no settings in EEPROM
+		Serial.println("No saved settings, use default.");
+		xGlobalSettings = xRestoreDefaultSettings();
+
+
+		Serial.println(xGlobalSettings.lCheckSum);
+
+
+
+		vSaveCurrentSettingsToEEPROM();
 	}
-	*/
+	else {
+		Serial.println("Success!");
+	}
+	
 
 	initPeripheral();
 
 	vConnectWifi();
-
-	struct SettingsStruct xStruct;
-
-	strcpy(xStruct.acDeviceID, "11134");
-	strcpy(xStruct.acWiFiSSID, "22822");
-	strcpy(xStruct.acWiFiPassword, "33493");
-	strcpy(xStruct.acMQTTserver, "444654");
-	strcpy(xStruct.acMQTTclientID, "55234554");
-	strcpy(xStruct.acMQTTclientPassword, "63256666");
-	xStruct.uiMQTTport = 6901;
-
-	xStruct.lCheckSum = lGetCRC32ofStruct(xStruct);
-
-	printf("%lx%s", xStruct.lCheckSum, "\n");
 
 }
 
