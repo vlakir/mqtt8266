@@ -1,0 +1,5 @@
+{"device_id":"D1_001","wifi_ssid":"T***","wifi_password":"b**********", "mqtt_server":"m**.cloudmqtt.com","mqtt_client_id":"j*******","mqtt_client_password":"Z***********","mqtt_port" :"19456"}
+                                           ^
+										   |
+                                           |
+Change the string with your real data ------

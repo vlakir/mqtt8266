@@ -10,6 +10,8 @@
 
 SettingsStruct xGlobalSettings;
 
+Timer xRecieveCOM;
+
 
 /*
 {
@@ -28,6 +30,25 @@ char input[] = "{\"device_id\":\"D1_002\",\"wifi_ssid\":\"T_27\",\"wifi_password
 					\"mqtt_server\":\"m24.cloudmqtt.com\",\"mqtt_client_id\":\"jyrpzrzt\", \
 					\"mqtt_client_password\":\"Z0X_d-YpixmZ\",\"mqtt_port\" :\"19456\"}";
 */
+
+
+void vGetMessage(void* context) {
+	String input = "";
+	while (Serial.available()) {
+		input = Serial.readString();
+	}
+	if (input != "") {				
+		char acInput [input.length() + 1];
+		input.toCharArray(acInput, input.length() + 1);	
+		Serial.println(acInput);
+		Serial.println(input.length());
+		xGlobalSettings = xGetSettingsFromJson(acInput);
+		xGlobalSettings.lCheckSum = DEFAULT_CRC;
+		vSaveCurrentSettingsToEEPROM();
+		Serial.println("Success load settings!");
+	}
+}
+
 
 
 void setup() {	
@@ -61,13 +82,22 @@ void setup() {
 
 	vConnectWifi();
 
+	xRecieveCOM.every(1000, vGetMessage, (void*)0);
+
+
 }
 
 
 void loop() {	
 
-	vMqttLoop();		
-	
+	vMqttLoop();
+
+
+	xRecieveCOM.update();
+
+
+
+
 	/*
 	String inString;
 	char * acBuffer;

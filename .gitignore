@@ -333,3 +333,6 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# confidencial settings (real logins with passwords, etc)
+settings_real.txt
