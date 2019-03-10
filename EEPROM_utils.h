@@ -5,7 +5,8 @@
 #include <ArduinoJson.h>
 #include <ESP_EEPROM.h>
 
-SettingsStruct xRestoreDefaultSettings();
-SettingsStruct xGetSettingsFromJson(char* input);
+void vRestoreDefaultSettings();
+int iGetSettingsFromJson(char* input);
 void vSaveCurrentSettingsToEEPROM();
 void vGetSettingsFromEEPROM();
+void vGetGlobalSettings();

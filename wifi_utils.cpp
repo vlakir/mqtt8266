@@ -13,17 +13,29 @@ void vConnectWifi() {
 
 	WiFi.begin(xGlobalSettings.acWiFiSSID, xGlobalSettings.acWiFiPassword);
 
-	while (WiFi.status() != WL_CONNECTED) {
+
+	for (int i = 0; i < 20; i++) { //while this cicle we can't get any command from serial port
+		if (WiFi.status() == WL_CONNECTED) {
+			randomSeed(micros());
+			Serial.println("");
+			Serial.println("WiFi connected");
+			Serial.println("IP address: ");
+			Serial.println(WiFi.localIP());			
+			break;
+		}			
 		delay(500);
 		Serial.print(".");
 	}
 
-	randomSeed(micros());
 
-	Serial.println("");
-	Serial.println("WiFi connected");
-	Serial.println("IP address: ");
-	Serial.println(WiFi.localIP());
+	/*
+	while (WiFi.status() != WL_CONNECTED) {	
+		delay(500);		
+		Serial.print(".");
+	}
+	*/
+
+
 
 }
 

@@ -1,8 +1,8 @@
 
+
 #include "mqtt_utils.h"
 
-
-Timer xPostStateADC, xPostStateGPIO;
+Timer xPostStateADCtimer, xPostStateGPIOtimer;
 static WiFiClient xWifiClient;
 static PubSubClient xPsClient(xWifiClient);
 
@@ -10,13 +10,13 @@ static PubSubClient xPsClient(xWifiClient);
 
 
 void vServerReconnect() {
+
+	static VirtualDelay singleDelay;
+
 	xPsClient.disconnect();
-	xPsClient.setServer(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport);
-	
+	xPsClient.setServer(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport);	
 	xPsClient.setCallback(vRecieveCallback);
-
 	Serial.print("Attempting MQTT connection...");
-
 	// Attempt to connect
 	if (xPsClient.connect("arduinoClient", xGlobalSettings.acMQTTclientID, xGlobalSettings.acMQTTclientPassword)) {
 		Serial.println("connected");
@@ -28,22 +28,19 @@ void vServerReconnect() {
 		// Wait 5 seconds before retrying
 		delay(5000);
 	}
-
 	char acTopic[80];
 	sprintf(acTopic, "%s%s", xGlobalSettings.acDeviceID, "/management/#");
 	xPsClient.subscribe(acTopic);
 }
 
 
-void vMqttLoop() {	
-		
-	while (!xPsClient.connected()) {
+void vMqttLoop() {			
+	if (!xPsClient.connected()) {
 		vServerReconnect();
-		xPostStateADC.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *)&xPsClient);
-		xPostStateGPIO.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);
+		xPostStateADCtimer.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *)&xPsClient);
+		xPostStateGPIOtimer.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);
 	}
-
-	xPostStateADC.update();
-	xPostStateGPIO.update();
+	xPostStateADCtimer.update();
+	xPostStateGPIOtimer.update();
 	xPsClient.loop();
 }
