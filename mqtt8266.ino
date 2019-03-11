@@ -4,7 +4,7 @@
  Author:	Vladimir
 */
 
-#include "mqtt8622.h"
+#include "mqtt8266.h"
 
 SettingsStruct xGlobalSettings;
 
