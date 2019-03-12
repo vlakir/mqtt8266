@@ -1,7 +1,26 @@
+/*
+Vladimir Kirievskiy (C) 2019
+********************************************************************************************
+* @brief MQTT client software for esp8266 platform (tested on Wemos D1 mini)
+* @license MIT
+* SDK:	Arduino IDE 1.8.5 with plugin for esp8266
+*
+********************************************************************************************
+* @author V. Kirievskiy aka vlakir
+* vladimir@kirievskiy.ru
+* https://github.com/vlakir
+* This software is furnished "as is", without technical support, and with no
+* warranty, express or implied, as to its usefulness for any purpose.
+*/
+
 
 #include "EEPROM_utils.h"
 
-
+/*
+ * @brief
+ * Restore xGlobalSettings from defines in settings.h
+ *
+ */
 void vRestoreDefaultSettings() {	
 	strcpy(xGlobalSettings.acDeviceID, DEFAULT_DEVICE_UNIQ_ID);
 	strcpy(xGlobalSettings.acWiFiSSID, DEFAULT_WIFI_SSID);
@@ -13,19 +32,25 @@ void vRestoreDefaultSettings() {
 	xGlobalSettings.ulCheckSum = DEFAULT_CRC;
 }
 
-
-int iGetSettingsFromJson(char* input) {
+/*
+ * @brief
+ * Convert JSON string (see: /doc/settings_example.txt) to xGlobalSettings.
+ *
+ * @param acInput - JSON string
+ * @return 0 if conversion ok, -1 in case of some error
+ */
+int iGetSettingsFromJson(char* acInput) {
 	const int capacity = JSON_OBJECT_SIZE(7);
-	StaticJsonBuffer<capacity> jb;
-	JsonObject& obj = jb.parseObject(input);
-	if (obj.success()) {
-		strcpy(xGlobalSettings.acDeviceID, obj["device_id"]);
-		strcpy(xGlobalSettings.acWiFiSSID, obj["wifi_ssid"]);
-		strcpy(xGlobalSettings.acWiFiPassword, obj["wifi_password"]);
-		strcpy(xGlobalSettings.acMQTTserver, obj["mqtt_server"]);
-		strcpy(xGlobalSettings.acMQTTclientID, obj["mqtt_client_id"]);
-		strcpy(xGlobalSettings.acMQTTclientPassword, obj["mqtt_client_password"]);
-		xGlobalSettings.uiMQTTport = atoi(obj["mqtt_port"]);
+	StaticJsonBuffer<capacity> xJsonBuffer;
+	JsonObject& xJsonObject = xJsonBuffer.parseObject(acInput);
+	if (xJsonObject.success()) {
+		strcpy(xGlobalSettings.acDeviceID, xJsonObject["device_id"]);
+		strcpy(xGlobalSettings.acWiFiSSID, xJsonObject["wifi_ssid"]);
+		strcpy(xGlobalSettings.acWiFiPassword, xJsonObject["wifi_password"]);
+		strcpy(xGlobalSettings.acMQTTserver, xJsonObject["mqtt_server"]);
+		strcpy(xGlobalSettings.acMQTTclientID, xJsonObject["mqtt_client_id"]);
+		strcpy(xGlobalSettings.acMQTTclientPassword, xJsonObject["mqtt_client_password"]);
+		xGlobalSettings.uiMQTTport = atoi(xJsonObject["mqtt_port"]);
 		xGlobalSettings.ulCheckSum = DEFAULT_CRC;
 		return 0;
 	}
@@ -34,7 +59,11 @@ int iGetSettingsFromJson(char* input) {
 	}
 }
 
-
+/*
+ * @brief
+ * Save xGlobalSettings to EEPROM
+ *
+ */
 void vSaveCurrentSettingsToEEPROM() {	
 	EEPROM.begin(sizeof(SettingsStruct));
 	EEPROM.put(0, xGlobalSettings);
@@ -42,11 +71,23 @@ void vSaveCurrentSettingsToEEPROM() {
 	Serial.println((ok1) ? "Commit EEPROM OK" : "Commit EEPROM failed");	
 }
 
+
+/*
+ * @brief
+ * Restore xGlobalSettings from EEPROM
+ *
+ */
 void vGetSettingsFromEEPROM() {
 	EEPROM.begin(sizeof(SettingsStruct));
 	EEPROM.get(0, xGlobalSettings);
 }
 
+
+/*
+ * @brief
+ * Restore xGlobalSettings from EEPROM if they are stored there or from defines in settings.h
+ *
+ */
 void vGetGlobalSettings() {
 	Serial.println("\n\n\nTry to get settings from EEPROM...");
 	vGetSettingsFromEEPROM();

@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
+
 #define DEFAULT_DEVICE_UNIQ_ID "D1_001"
 #define DEFAULT_WIFI_SSID "T**"
 #define DEFAULT_WIFI_PASSWORD "b**********"
@@ -30,5 +31,6 @@ struct SettingsStruct {
 	unsigned int uiMQTTport;
 	unsigned long ulCheckSum;
 };
+
 
 extern SettingsStruct xGlobalSettings;

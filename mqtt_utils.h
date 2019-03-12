@@ -9,8 +9,5 @@
 #include "periphery.h"
 
 
-
-
-
 void vServerReconnect();
 void vMqttLoop();

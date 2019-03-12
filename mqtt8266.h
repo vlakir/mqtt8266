@@ -8,5 +8,4 @@
 
 void vRecieveCallback(char* topic, byte* payload, unsigned int length);
 void vPostADC(void* vContext);
-
 void vGetMessage(void* context);
