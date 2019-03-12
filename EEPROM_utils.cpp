@@ -21,7 +21,7 @@ Vladimir Kirievskiy (C) 2019
  * Restore xGlobalSettings from defines in settings.h
  *
  */
-void vRestoreDefaultSettings() {	
+void vRestoreDefaultSettings(void) {	
 	strcpy(xGlobalSettings.acDeviceID, DEFAULT_DEVICE_UNIQ_ID);
 	strcpy(xGlobalSettings.acWiFiSSID, DEFAULT_WIFI_SSID);
 	strcpy(xGlobalSettings.acWiFiPassword, DEFAULT_WIFI_PASSWORD);
@@ -64,7 +64,7 @@ int iGetSettingsFromJson(char* acInput) {
  * Save xGlobalSettings to EEPROM
  *
  */
-void vSaveCurrentSettingsToEEPROM() {	
+void vSaveCurrentSettingsToEEPROM(void) {
 	EEPROM.begin(sizeof(SettingsStruct));
 	EEPROM.put(0, xGlobalSettings);
 	boolean ok1 = EEPROM.commitReset();
@@ -77,7 +77,7 @@ void vSaveCurrentSettingsToEEPROM() {
  * Restore xGlobalSettings from EEPROM
  *
  */
-void vGetSettingsFromEEPROM() {
+void vGetSettingsFromEEPROM(void) {
 	EEPROM.begin(sizeof(SettingsStruct));
 	EEPROM.get(0, xGlobalSettings);
 }
@@ -88,7 +88,7 @@ void vGetSettingsFromEEPROM() {
  * Restore xGlobalSettings from EEPROM if they are stored there or from defines in settings.h
  *
  */
-void vGetGlobalSettings() {
+void vGetGlobalSettings(void) {
 	Serial.println("\n\n\nTry to get settings from EEPROM...");
 	vGetSettingsFromEEPROM();
 	if (xGlobalSettings.ulCheckSum != DEFAULT_CRC) { //no settings in EEPROM

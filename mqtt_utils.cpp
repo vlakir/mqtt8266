@@ -23,7 +23,7 @@ static PubSubClient xPsClient(xWifiClient);
 
 
 
-void vServerReconnect() {
+void vServerReconnect(void) {
 
 	static VirtualDelay singleDelay;
 
@@ -48,7 +48,7 @@ void vServerReconnect() {
 }
 
 
-void vMqttLoop() {			
+void vMqttLoop(void) {
 	if (!xPsClient.connected()) {
 		vServerReconnect();
 		xPostStateADCtimer.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *)&xPsClient);

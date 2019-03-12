@@ -5,5 +5,5 @@
 #include <ESP8266WiFi.h>
 
 
-void vConnectWifi();
+void vConnectWifi(void);
 

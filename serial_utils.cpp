@@ -48,13 +48,13 @@ void vGetMessage(void* context) {
 }
 
 
-void vInitSerial() {
+void vInitSerial(void) {
 	Serial.begin(SERIAL_PORT_SPEED);
 	delay(1000);
 	xRecieveStringTimer.every(SERIAL_PORT_CHECKING_PERIOD_MS, vGetMessage, (void*)0);
 }
 
 
-void vSerialLoop() {
+void vSerialLoop(void) {
 	xRecieveStringTimer.update();
 }

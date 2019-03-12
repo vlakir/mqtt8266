@@ -17,7 +17,7 @@ Vladimir Kirievskiy (C) 2019
 #include "periphery.h"
 
 
-void initPeripheral () {
+void initPeripheral (void) {
 	//set suitable for your device
 	pinMode(0, OUTPUT);
 	pinMode(2, OUTPUT);

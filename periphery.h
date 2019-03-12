@@ -7,7 +7,7 @@
 #include <string.h>
 
 
-void initPeripheral();
+void initPeripheral(void);
 void vPostADC(void* context);
 void vPostGPIO(void* vContext);
 void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength);

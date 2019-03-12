@@ -6,7 +6,7 @@
 #include "EEPROM_utils.h"
 
 
-void vInitSerial();
+void vInitSerial(void);
 void vGetMessage(void* context);
-void vSerialLoop();
+void vSerialLoop(void);
 
