@@ -1,6 +1,6 @@
 # mqtt8622
 
-##MQTT client software for esp8266 platform
+## MQTT client software for esp8266 platform
 
 ## Important notes
 
