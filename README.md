@@ -1,6 +1,6 @@
 # mqtt8622
 
-** MQTT client software for esp8266 platform **
+**MQTT client software for esp8266 platform**
 
 It was tested on Wemos D1 mini, but could be adapted to any another esp8622 platform with minamal code changes.
 
