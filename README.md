@@ -13,3 +13,6 @@ The program publishes the broker:
 The program subscribes the broker:
 - commands of GPIO control as messages of topics <DEVICE NAME>/management/GPIOxx
 
+License: MIT
+
+This software is furnished "as is", without technical support, and with no warranty, express or implied, as to its usefulness for any purpose.
