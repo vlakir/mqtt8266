@@ -4,7 +4,7 @@
 
 ## Important notes
 
-It was tested on Wemos D1 mini, but could be adapted to any another esp8622 platform with minamal code changes.
+It was tested on Wemos D1 mini but could be easy adapted for any another esp8622 platform.
 
 Header file settings.h includes default values of all important system settings: wifi ssid and password, access rules for mqtt broker, timeouts and delays. Some of them can be load from serial terminal (see: serial_utils.cpp) or from EEPROM (see: EEPROM_utils.cpp).
 
