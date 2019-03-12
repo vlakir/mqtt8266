@@ -16,17 +16,14 @@ Vladimir Kirievskiy (C) 2019
 
 #include "mqtt_utils.h"
 
+
 Timer xPostStateADCtimer, xPostStateGPIOtimer;
 static WiFiClient xWifiClient;
 static PubSubClient xPsClient(xWifiClient);
 
 
-
-
 void vServerReconnect(void) {
-
 	static VirtualDelay singleDelay;
-
 	xPsClient.disconnect();
 	xPsClient.setServer(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport);	
 	xPsClient.setCallback(vRecieveCallback);
