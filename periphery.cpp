@@ -18,16 +18,16 @@ Vladimir Kirievskiy (C) 2019
 
 
 void initPeripheral (void) {
-	//set suitable for your device
-	pinMode(0, OUTPUT);
-	pinMode(2, OUTPUT);
-	pinMode(4, OUTPUT);
-	pinMode(5, OUTPUT);
-	pinMode(12, INPUT);
-	pinMode(13, INPUT);
-	pinMode(14, INPUT);
-	pinMode(15, INPUT);
-	pinMode(16, INPUT);
+	//set suitable mode for your device
+	pinMode(0, MODE_PIN_0);
+	pinMode(2, MODE_PIN_2);
+	pinMode(4, MODE_PIN_4);
+	pinMode(5, MODE_PIN_5);
+	pinMode(12, MODE_PIN_12);
+	pinMode(13, MODE_PIN_13);
+	pinMode(14, MODE_PIN_14);
+	pinMode(15, MODE_PIN_15);
+	pinMode(16, MODE_PIN_16);
 }
 
 
