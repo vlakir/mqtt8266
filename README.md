@@ -10,7 +10,7 @@ Header file settings.h includes default values of all important system settings:
 
 The program publishes:
 - current state of 9 GPIOs: separately as messages of topics <DEVICE NAME>/state/GPIOxx or all together as 9-bit word as message of topic <DEVICE NAME>/state/GPIOALL;
-- current value of ADC input as 
+- current value of ADC input as <DEVICE NAME>/state/ADC
   
 The program subscribes:
 - commands of GPIO control as messages of topics <DEVICE NAME>/management/GPIOxx
