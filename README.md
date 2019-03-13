@@ -13,7 +13,7 @@ The program publishes:
 - current value of ADC input as DEVICE_NAME/state/ADC
   
 The program subscribes:
-- commands of GPIO control as messages of topics DEVICE NAME/management/GPIOxx
+- commands of GPIO control as messages of topics DEVICE_NAME/management/GPIOxx
 
 ## Built With
 
