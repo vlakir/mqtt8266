@@ -21,8 +21,12 @@ Timer xPostStateADCtimer, xPostStateGPIOtimer;
 static WiFiClient xWifiClient;
 static PubSubClient xPsClient(xWifiClient);
 
-
-void vServerReconnect(void) {
+/*
+ * @brief
+ * Connect to MQTT broker
+ *
+ */
+void vServer—onnect(void) {
 	static VirtualDelay singleDelay;
 	xPsClient.disconnect();
 	xPsClient.setServer(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport);	
@@ -44,10 +48,14 @@ void vServerReconnect(void) {
 	xPsClient.subscribe(acTopic);
 }
 
-
+/*
+ * @brief
+ * MQTT procedure for placement in the main loop 
+ *
+ */
 void vMqttLoop(void) {
 	if (!xPsClient.connected()) {
-		vServerReconnect();
+		vServer—onnect();
 		xPostStateADCtimer.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *)&xPsClient);
 		xPostStateGPIOtimer.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);
 	}
