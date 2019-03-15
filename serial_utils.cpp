@@ -18,7 +18,13 @@ Vladimir Kirievskiy (C) 2019
 
 Timer xRecieveStringTimer;
 
-
+/*
+ * @brief
+ * Get JSON string from serial port, parse it and save it to xGlobalSettings and to EEPROM/
+ * If word "reset" comes then set xGlobalSettings to defaults (see settings.h)
+ *
+ * @param context - dummy variable need for compatibility with Timer v2.1 only 
+ */
 void vGetMessage(void* context) {
 	String input = "";
 	while (Serial.available()) {
@@ -47,7 +53,11 @@ void vGetMessage(void* context) {
 	}
 }
 
-
+/*
+ * @brief
+ * Serial port initialization routine
+ *
+ */
 void vInitSerial(void) {
 	Serial.begin(SERIAL_PORT_SPEED);
 	delay(1000);
@@ -55,6 +65,11 @@ void vInitSerial(void) {
 }
 
 
+/*
+ * @brief
+ * Serial scan procedure for placement in the main loop
+ *
+ */
 void vSerialLoop(void) {
 	xRecieveStringTimer.update();
 }

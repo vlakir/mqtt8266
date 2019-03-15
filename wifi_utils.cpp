@@ -16,6 +16,12 @@ Vladimir Kirievskiy (C) 2019
 
 #include "wifi_utils.h"
 
+
+/*
+ * @brief
+ * Connect to wifi routine
+ *
+ */
 void vConnectWifi(void) {
 	delay(10);
 	Serial.println();
