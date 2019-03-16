@@ -16,11 +16,14 @@ Vladimir Kirievskiy (C) 2019
 
 #include "serial_utils.h"
 
+
 Timer xRecieveStringTimer;
+
 
 /*
  * @brief
- * Get JSON string from serial port, parse it and save it to xGlobalSettings and to EEPROM/
+ * Get JSON string from serial port, parse it and save it to xGlobalSettings and EEPROM.
+ * See /doc/settings_example.txt
  * If word "reset" comes then set xGlobalSettings to defaults (see settings.h)
  *
  * @param context - dummy variable need for compatibility with Timer v2.1 only 
@@ -52,6 +55,7 @@ void vGetMessage(void* context) {
 		}
 	}
 }
+
 
 /*
  * @brief

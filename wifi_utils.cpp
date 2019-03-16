@@ -41,5 +41,3 @@ void vConnectWifi(void) {
 		Serial.print(".");
 	}
 }
-
-

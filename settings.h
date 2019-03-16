@@ -30,9 +30,6 @@
 #define MODE_PIN_16 INPUT
 
 
-
-
-
 struct SettingsStruct {
 	char acDeviceID[20];
 	char acWiFiSSID[20];

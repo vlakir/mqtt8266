@@ -17,6 +17,11 @@ Vladimir Kirievskiy (C) 2019
 #include "periphery.h"
 
 
+/*
+ * @brief
+ * GPIO initialization routine
+ *
+ */
 void initPeripheral (void) {
 	//set suitable mode for your device
 	pinMode(0, MODE_PIN_0);
@@ -31,11 +36,17 @@ void initPeripheral (void) {
 }
 
 
+/*
+ * @brief
+ * Post current ADC value to MQTT broker.
+ *
+ * @param context - PubSubClient object
+ */
 void vPostADC(void* vContext) {
 	static unsigned int uiOld;
 	static VirtualDelay singleDelay;
-	PubSubClient *pxPsClient = (PubSubClient *)vContext;
-	
+	PubSubClient *pxPsClient = (PubSubClient *)vContext;	
+
 	DO_ONCE(
 		uiOld = 1025; // initial unreal value for 10-bit ADC
 	);
@@ -44,23 +55,24 @@ void vPostADC(void* vContext) {
 	if (singleDelay.elapsed()) {
 		uiOld = 1025; // to remind of itself even if nothing has changed
 	}
-
-	unsigned int uiADC = analogRead(A0);
-	
+	unsigned int uiADC = analogRead(A0);	
 	if (uiADC != uiOld) {
 		uiOld = uiADC;
 		char acMessage[33];
 		char acTopic[80];
-		sprintf(acMessage, "%d", uiADC);
-		
-		
+		sprintf(acMessage, "%d", uiADC);		
 		sprintf(acTopic, "%s%s%s", xGlobalSettings.acDeviceID, "/state", "/ADC");
-
 		(*pxPsClient).publish(acTopic, acMessage);
 	}
 }
 
 
+/*
+ * @brief
+ * Post current GPIO state to MQTT broker.
+ *
+ * @param context - PubSubClient object
+ */
 void vPostGPIO(void* vContext) {
 	static unsigned int uiOld;
 	static VirtualDelay singleDelay;
@@ -74,7 +86,6 @@ void vPostGPIO(void* vContext) {
 	if (singleDelay.elapsed()) {
 		uiOld = 513; // to remind of itself even if nothing has changed
 	}
-
 	bool bit0 = digitalRead(0);
 	bool bit1 = digitalRead(2);
 	bool bit2 = digitalRead(4);
@@ -84,10 +95,8 @@ void vPostGPIO(void* vContext) {
 	bool bit6 = digitalRead(14);
 	bool bit7 = digitalRead(15);
 	bool bit8 = digitalRead(16);
-
 	unsigned int uiValue = bit0 + 2 * bit1 + 4 * bit2 + 8 * bit3 + 16 * bit4 + 
 		                   32 * bit5 + 64 * bit6 + 128 * bit7 + 256 * bit8;
-
 	if (uiValue != uiOld) {
 		uiOld = uiValue;		
 		vStateBit(bit0, "GPIO0", pxPsClient);
@@ -104,6 +113,14 @@ void vPostGPIO(void* vContext) {
 }
 
 
+/*
+ * @brief
+ * Callback function for recieving command message from MQTT broker and set GPIO
+ *
+ * @param acTopic - command message
+ * @param abPayload - value of command message ("0" or "1")
+ * @param uiLength - length of byte array
+ */
 void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {	
 	char acToken[20];
 	strcpy(acToken, acGetToken(acTopic, 2));
@@ -140,6 +157,14 @@ void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {
 }
 
 
+/*
+ * @brief
+ * Tokenize topic message from MQTT broker and return uiNumber member of it
+ *
+ * @param acTopicStr - topic message
+ * @param uiNumber - number of returned member
+ * @return - selected member of topic message
+ */
 char* acGetToken(char* acTopicStr, unsigned int uiNumber) {
 	char acTopic[80];
 	strcpy(acTopic, acTopicStr);
@@ -153,17 +178,31 @@ char* acGetToken(char* acTopicStr, unsigned int uiNumber) {
 	return aacTokens[uiNumber];
 }
 
-
-void vSetOut(char * cMessage, byte bNumber) {
+/*
+ * @brief
+ * Set bOutNumber GPIO to state defined cMessage value
+ *
+ * @param cMessage - message ("0" of "1")
+ * @param bOutNumber - GPIO number
+ */
+void vSetOut(char * cMessage, byte bOutNumber) {
 	if (strcmp(cMessage, "1") == 0) {
-		digitalWrite(bNumber, HIGH);
+		digitalWrite(bOutNumber, HIGH);
 	}
 	else if (strcmp(cMessage, "0") == 0) {
-		digitalWrite(bNumber, LOW);
+		digitalWrite(bOutNumber, LOW);
 	}
 }
 
 
+/*
+ * @brief
+ * Prepare topic string and send it to MQTT broker
+ *
+ * @param uiValue - value of sending parameter 
+ * @param acId - name of parameter (e.g. "ADC" or "GPIO1")
+ * @param pxPsClient - PubSubClient object
+ */
 void vStateBit(unsigned int uiValue, char* acId, PubSubClient *pxPsClient) {
 	char acMessage[33];
 	char acTopic[80];	
@@ -174,6 +213,14 @@ void vStateBit(unsigned int uiValue, char* acId, PubSubClient *pxPsClient) {
 }
 
 
+/*
+ * @brief
+ * Convert byte array to string
+ *
+ * @param abPayload - byte array
+ * @param uiLength - length of byte array
+ * @return - converted string
+ */
 char * acPayload2string(byte* abPayload, unsigned int uiLength) {
 
 	char* acMessageBuffer = new char[uiLength+1];

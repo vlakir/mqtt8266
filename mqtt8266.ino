@@ -16,8 +16,10 @@ Vladimir Kirievskiy (C) 2019
 
 #include "mqtt8266.h"
 
+
 // logins and passwords for wifi and mqtt-broker, etc.
 SettingsStruct xGlobalSettings;
+
 
 void setup(void) {
 	vInitSerial();
@@ -25,6 +27,7 @@ void setup(void) {
 	initPeripheral();
 	vConnectWifi();
 }
+
 
 void loop(void) {
 	vMqttLoop();
