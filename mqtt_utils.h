@@ -10,4 +10,5 @@
 
 
 void vMqttLoop(void);
-void vServerConnect(void);
+
+static void _vServerConnect(void);

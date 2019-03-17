@@ -99,16 +99,16 @@ void vPostGPIO(void* vContext) {
 		                   32 * bit5 + 64 * bit6 + 128 * bit7 + 256 * bit8;
 	if (uiValue != uiOld) {
 		uiOld = uiValue;		
-		vStateBit(bit0, "GPIO0", pxPsClient);
-		vStateBit(bit1, "GPIO2", pxPsClient);
-		vStateBit(bit2, "GPIO4", pxPsClient);
-		vStateBit(bit3, "GPIO5", pxPsClient);
-		vStateBit(bit4, "GPIO12", pxPsClient);
-		vStateBit(bit5, "GPIO13", pxPsClient);
-		vStateBit(bit6, "GPIO14", pxPsClient);
-		vStateBit(bit7, "GPIO15", pxPsClient);
-		vStateBit(bit8, "GPIO16", pxPsClient);
-		vStateBit(uiValue, "GPIOALL", pxPsClient);
+		_vStateBit(bit0, "GPIO0", pxPsClient);
+		_vStateBit(bit1, "GPIO2", pxPsClient);
+		_vStateBit(bit2, "GPIO4", pxPsClient);
+		_vStateBit(bit3, "GPIO5", pxPsClient);
+		_vStateBit(bit4, "GPIO12", pxPsClient);
+		_vStateBit(bit5, "GPIO13", pxPsClient);
+		_vStateBit(bit6, "GPIO14", pxPsClient);
+		_vStateBit(bit7, "GPIO15", pxPsClient);
+		_vStateBit(bit8, "GPIO16", pxPsClient);
+		_vStateBit(uiValue, "GPIOALL", pxPsClient);
 	}
 }
 
@@ -123,36 +123,36 @@ void vPostGPIO(void* vContext) {
  */
 void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {	
 	char acToken[20];
-	strcpy(acToken, acGetToken(acTopic, 2));
-	char * acMessage = acPayload2string(abPayload, uiLength);
+	strcpy(acToken, _acGetToken(acTopic, 2));
+	char * acMessage = _acPayload2string(abPayload, uiLength);
 	if (strcmp(acToken, "GPIO0") == 0) {
-		vSetOut(acMessage, 0);
+		_vSetOut(acMessage, 0);
 	} else if (strcmp(acToken, "GPIO2") == 0) {
-		vSetOut(acMessage, 2); // BUILTIN_LED for WEMOS D1 mini
+		_vSetOut(acMessage, 2); // BUILTIN_LED for WEMOS D1 mini
 	} else if (strcmp(acToken, "GPIO4") == 0) {
-		vSetOut(acMessage, 4); 
+		_vSetOut(acMessage, 4); 
 	} else if (strcmp(acToken, "GPIO5") == 0) {
-		vSetOut(acMessage, 5);
+		_vSetOut(acMessage, 5);
 	} else if (strcmp(acToken, "GPIO12") == 0) {
-		vSetOut(acMessage, 12);
+		_vSetOut(acMessage, 12);
 	} else if (strcmp(acToken, "GPIO13") == 0) {
-		vSetOut(acMessage, 13);
+		_vSetOut(acMessage, 13);
 	} else if (strcmp(acToken, "GPIO14") == 0) {
-		vSetOut(acMessage, 14);
+		_vSetOut(acMessage, 14);
 	} else if (strcmp(acToken, "GPIO15") == 0) {
-		vSetOut(acMessage, 15);
+		_vSetOut(acMessage, 15);
 	} else if (strcmp(acToken, "GPIO16") == 0) {
-		vSetOut(acMessage, 16);
+		_vSetOut(acMessage, 16);
 	} else if (strcmp(acToken, "GPIOALL") == 0) {
-		vSetOut(acMessage, 0);
-		vSetOut(acMessage, 2); // BUILTIN_LED for WEMOS D1 mini
-		vSetOut(acMessage, 4);
-		vSetOut(acMessage, 5);
-		vSetOut(acMessage, 12);
-		vSetOut(acMessage, 13);
-		vSetOut(acMessage, 14);
-		vSetOut(acMessage, 15);
-		vSetOut(acMessage, 16);
+		_vSetOut(acMessage, 0);
+		_vSetOut(acMessage, 2); // BUILTIN_LED for WEMOS D1 mini
+		_vSetOut(acMessage, 4);
+		_vSetOut(acMessage, 5);
+		_vSetOut(acMessage, 12);
+		_vSetOut(acMessage, 13);
+		_vSetOut(acMessage, 14);
+		_vSetOut(acMessage, 15);
+		_vSetOut(acMessage, 16);
 	}
 }
 
@@ -165,7 +165,7 @@ void vRecieveCallback(char* acTopic, byte* abPayload, unsigned int uiLength) {
  * @param uiNumber - number of returned member
  * @return - selected member of topic message
  */
-char* acGetToken(char* acTopicStr, unsigned int uiNumber) {
+static char* _acGetToken(char* acTopicStr, unsigned int uiNumber) {
 	char acTopic[80];
 	strcpy(acTopic, acTopicStr);
 	char* aacTokens[20];
@@ -185,7 +185,7 @@ char* acGetToken(char* acTopicStr, unsigned int uiNumber) {
  * @param cMessage - message ("0" of "1")
  * @param bOutNumber - GPIO number
  */
-void vSetOut(char * cMessage, byte bOutNumber) {
+static void _vSetOut(char * cMessage, byte bOutNumber) {
 	if (strcmp(cMessage, "1") == 0) {
 		digitalWrite(bOutNumber, HIGH);
 	}
@@ -203,7 +203,7 @@ void vSetOut(char * cMessage, byte bOutNumber) {
  * @param acId - name of parameter (e.g. "ADC" or "GPIO1")
  * @param pxPsClient - PubSubClient object
  */
-void vStateBit(unsigned int uiValue, char* acId, PubSubClient *pxPsClient) {
+static void _vStateBit(unsigned int uiValue, char* acId, PubSubClient *pxPsClient) {
 	char acMessage[33];
 	char acTopic[80];	
 	sprintf(acMessage, "%d", uiValue);
@@ -221,7 +221,7 @@ void vStateBit(unsigned int uiValue, char* acId, PubSubClient *pxPsClient) {
  * @param uiLength - length of byte array
  * @return - converted string
  */
-char * acPayload2string(byte* abPayload, unsigned int uiLength) {
+static char* _acPayload2string(byte* abPayload, unsigned int uiLength) {
 
 	char* acMessageBuffer = new char[uiLength+1];
 

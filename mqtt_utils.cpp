@@ -29,7 +29,7 @@ static PubSubClient xPsClient(xWifiClient);
  */
 void vMqttLoop(void) {
 	if (!xPsClient.connected()) {
-		vServerConnect();
+		_vServerConnect();
 		xPostStateADCtimer.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *)&xPsClient);
 		xPostStateGPIOtimer.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);
 	}
@@ -44,7 +44,7 @@ void vMqttLoop(void) {
  * Connect to MQTT broker
  *
  */
-void vServerConnect(void) {
+static void _vServerConnect(void) {
 	static VirtualDelay singleDelay;
 	xPsClient.disconnect();
 	xPsClient.setServer(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport);	

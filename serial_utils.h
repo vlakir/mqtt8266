@@ -7,6 +7,6 @@
 
 
 void vInitSerial(void);
-void vGetMessage(void* context);
 void vSerialLoop(void);
 
+static void _vGetMessage(void* context);
