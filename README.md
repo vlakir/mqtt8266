@@ -9,7 +9,7 @@ It was tested on Wemos D1 mini but could be easy adapted for any other esp8622 p
 Header file settings.h includes default values of all important system settings: device name, wifi ssid and password, access rules for mqtt broker, timeouts and delays. Some of them can be loaded from serial terminal (see: serial_utils.cpp) or from EEPROM (see: EEPROM_utils.cpp).
 
 The program publishes:
-- current state of 9 GPIOs: separately as messages of topics DEVICE_NAME/state/GPIOxx or all together as 9-bit word as message of topic DEVICE_NAME/state/GPIOALL;
+- current state of 9 GPIOs: separately as messages of topics DEVICE_NAME/state/GPIOxx and all pins together as 9-bit word (topic DEVICE_NAME/state/GPIOALL);
 - current value of ADC input as DEVICE_NAME/state/ADC
   
 The program subscribes:
