@@ -21,12 +21,30 @@ Timer xPostStateADCtimer, xPostStateGPIOtimer;
 static WiFiClient xWifiClient;
 static PubSubClient xPsClient(xWifiClient);
 
+
+/*
+ * @brief
+ * MQTT procedure for placement in the main loop
+ *
+ */
+void vMqttLoop(void) {
+	if (!xPsClient.connected()) {
+		vServerConnect();
+		xPostStateADCtimer.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *)&xPsClient);
+		xPostStateGPIOtimer.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);
+	}
+	xPostStateADCtimer.update();
+	xPostStateGPIOtimer.update();
+	xPsClient.loop();
+}
+
+
 /*
  * @brief
  * Connect to MQTT broker
  *
  */
-void vServer—onnect(void) {
+void vServerConnect(void) {
 	static VirtualDelay singleDelay;
 	xPsClient.disconnect();
 	xPsClient.setServer(xGlobalSettings.acMQTTserver, xGlobalSettings.uiMQTTport);	
@@ -48,18 +66,3 @@ void vServer—onnect(void) {
 	xPsClient.subscribe(acTopic);
 }
 
-/*
- * @brief
- * MQTT procedure for placement in the main loop 
- *
- */
-void vMqttLoop(void) {
-	if (!xPsClient.connected()) {
-		vServer—onnect();
-		xPostStateADCtimer.every(ADC_CHECK_PERIOD_MS, vPostADC, (void *)&xPsClient);
-		xPostStateGPIOtimer.every(GPIO_CHECK_PERIOD_MS, vPostGPIO, (void *)&xPsClient);
-	}
-	xPostStateADCtimer.update();
-	xPostStateGPIOtimer.update();
-	xPsClient.loop();
-}
